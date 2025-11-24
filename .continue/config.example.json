@@ -1,0 +1,13 @@
+{
+  // Example Continue configuration pointing to local Ollama and MCP servers.
+  // Copy this file to ~/.continue/config.json and adjust paths as needed.
+  "ollamaBaseUrl": "http://localhost:11434",
+  // Use a YAML or JSON file from .continue/mcpServers to define your available servers.
+  "mcpServers": "./.continue/mcpServers/agent-dev.yaml",
+  // Adjust model settings as desired; these values match the example machine in the blog.
+  "model": {
+    "model": "nemotron-9b",
+    "temperature": 0.2,
+    "maxTokens": 2048
+  }
+}

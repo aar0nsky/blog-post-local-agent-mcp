@@ -1,0 +1,141 @@
+name: Dev Stack
+version: 0.0.1
+schema: v1
+
+mcpServers:
+  # 1) Fetch – HTTP/HTML → clean text
+  - name: Fetch MCP server
+    command: docker
+    args:
+      - run
+      - -i
+      - --rm
+      - mcp/fetch
+    env: {}
+
+  # 2) Filesystem – project file read/write via Docker
+  #    NOTE: Replace /ABSOLUTE/PATH/TO/YOUR/PROJECT with your own path.
+  - name: Filesystem MCP server
+    command: docker
+    args:
+      - run
+      - -i
+      - --rm
+      - --mount
+      - type=bind,src=/ABSOLUTE/PATH/TO/YOUR/PROJECT,dst=/project
+      - mcp/filesystem
+      - /project
+    env: {}
+
+  # 3) Git – local repo operations via Docker
+  - name: Git MCP server
+    command: docker
+    args:
+      - run
+      - -i
+      - --rm
+      - --mount
+      - type=bind,src=/ABSOLUTE/PATH/TO/YOUR/PROJECT,dst=/repo
+      - mcp/git
+      - /repo
+    env: {}
+
+  # 4) XRAY – deep, AST-based code intelligence
+  - name: XRAY Code Intelligence
+    command: xray-mcp
+    args:
+      - --root
+      - /ABSOLUTE/PATH/TO/YOUR/PROJECT
+    env: {}
+
+  # 5) GitHub – GitHub repo/PR/issue integration
+  - name: GitHub MCP server
+    command: npx
+    args:
+      - -y
+      - "@modelcontextprotocol/server-github"
+    env:
+      GITHUB_TOKEN: "${GITHUB_TOKEN}"
+
+  # 6) Playwright / Browser – browser automation and scraping
+  - name: Playwright Browser MCP server
+    command: npx
+    args:
+      - "@playwright/mcp@latest"
+    env: {}
+
+  # 7) Database – SQLite example (user can switch to a different DB)
+  - name: SQLite DB MCP server
+    command: npx
+    args:
+      - -y
+      - mcp-sqlite
+      - ./examples/poc-local-ai-workflow/data/dev.db
+    env: {}
+
+  # 8) Everything Search – fast system-wide file search (optional)
+  - name: Everything Search MCP server
+    command: python
+    args:
+      - -m
+      - src.mcp_server_everything_search
+    env:
+      EVERYTHING_HTTP_HOST: "127.0.0.1"
+      EVERYTHING_HTTP_PORT: "8011"
+
+  # 9) Snyk – security scanning (optional)
+  - name: Snyk Security MCP server
+    command: snyk-mcp
+    args: []
+    env:
+      SNYK_TOKEN: "${SNYK_TOKEN}"
+
+  # 10) Sentry – error monitoring (optional)
+  - name: Sentry MCP server
+    command: sentry-mcp
+    args: []
+    env:
+      SENTRY_AUTH_TOKEN: "${SENTRY_AUTH_TOKEN}"
+
+  # 11) Docs / API Search – generic docs search MCP
+  - name: Docs Search MCP server
+    command: mcp-docs-search
+    args: []
+    env: {}
+
+  # 12) Oxylabs MCP – proxy-based scraping and data collection
+  - name: Oxylabs MCP server
+    command: oxylabs-mcp
+    args: []
+    env:
+      OXYLABS_USERNAME: "${OXYLABS_USERNAME}"
+      OXYLABS_PASSWORD: "${OXYLABS_PASSWORD}"
+      OXYLABS_API_KEY: "${OXYLABS_API_KEY}"
+
+  # 13) Context7 – up-to-date docs summarisation
+  #
+  #    Context7 uses Upstash’s API to fetch the latest documentation for
+  #    libraries and frameworks directly from their sources.  It prevents
+  #    hallucinations by returning the most current docs rather than relying on
+  #    stale training data.  To install, use npm or run via npx as shown
+  #    in the docs.
+  - name: Context7 MCP server
+    command: npx
+    args:
+      - -y
+      - "@upstash/context7-mcp"
+    env: {}
+
+  # 14) Sequential Thinking – break down complex problems into steps
+  #
+  #    The Sequential Thinking server helps the model organise its chain of
+  #    thought.  It accepts a "thought" and returns guidance for the next
+  #    step, maintaining a history of thoughts so your AI can revise or
+  #    continue where it left off.  Install via npm
+  #    or run via npx; see the Playbooks article for details.
+  - name: Sequential Thinking MCP server
+    command: npx
+    args:
+      - -y
+      - "@modelcontextprotocol/server-sequential-thinking"
+    env: {}

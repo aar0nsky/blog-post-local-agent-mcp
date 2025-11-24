@@ -1,0 +1,55 @@
+version: "3.8"
+services:
+  # Fetch server: fetches web pages and returns markdown.
+  fetch:
+    image: mcp/fetch:latest
+    container_name: mcp_fetch
+    stdin_open: true
+    tty: true
+
+  # Filesystem server: mounts the current project to provide read/write access.
+  filesystem:
+    image: mcp/filesystem:latest
+    container_name: mcp_filesystem
+    volumes:
+      - ../:/project
+    command: "/project"
+    stdin_open: true
+    tty: true
+
+  # Git server: provides git operations on the project.
+  git:
+    image: mcp/git:latest
+    container_name: mcp_git
+    volumes:
+      - ../:/repo
+    command: "/repo"
+    stdin_open: true
+    tty: true
+
+  # SQLite server: runs via Node and npx.  Uses node:18 as base image.
+  sqlite:
+    image: node:18
+    container_name: mcp_sqlite
+    working_dir: /workspace
+    volumes:
+      - ../:/workspace
+    command: ["npx", "-y", "mcp-sqlite", "./examples/poc-local-ai-workflow/data/dev.db"]
+    stdin_open: true
+    tty: true
+
+  # Everything search server (Windows only).  Runs a Python module; may fail on non‑Windows.
+  everything:
+    image: python:3.11
+    container_name: mcp_everything
+    volumes:
+      - ../:/workspace
+    working_dir: /workspace
+    command: ["python", "-m", "src.mcp_server_everything_search"]
+    environment:
+      EVERYTHING_HTTP_HOST: "0.0.0.0"
+      EVERYTHING_HTTP_PORT: "8011"
+    stdin_open: true
+    tty: true
+
+  # Docs search and other servers can be added here.  Many are started on demand via CLI, so they are omitted from Compose.

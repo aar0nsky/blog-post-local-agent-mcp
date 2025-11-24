@@ -1,0 +1,104 @@
+{
+  "name": "Dev Stack",
+  "version": "0.0.1",
+  "schema": "v1",
+  "mcpServers": [
+    {
+      "name": "Fetch MCP server",
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "mcp/fetch"],
+      "env": {}
+    },
+    {
+      "name": "Filesystem MCP server",
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "--mount", "type=bind,src=/ABSOLUTE/PATH/TO/YOUR/PROJECT,dst=/project", "mcp/filesystem", "/project"],
+      "env": {}
+    },
+    {
+      "name": "Git MCP server",
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "--mount", "type=bind,src=/ABSOLUTE/PATH/TO/YOUR/PROJECT,dst=/repo", "mcp/git", "/repo"],
+      "env": {}
+    },
+    {
+      "name": "XRAY Code Intelligence",
+      "command": "xray-mcp",
+      "args": ["--root", "/ABSOLUTE/PATH/TO/YOUR/PROJECT"],
+      "env": {}
+    },
+    {
+      "name": "GitHub MCP server",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_TOKEN": "${GITHUB_TOKEN}"
+      }
+    },
+    {
+      "name": "Playwright Browser MCP server",
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"],
+      "env": {}
+    },
+    {
+      "name": "SQLite DB MCP server",
+      "command": "npx",
+      "args": ["-y", "mcp-sqlite", "./examples/poc-local-ai-workflow/data/dev.db"],
+      "env": {}
+    },
+    {
+      "name": "Everything Search MCP server",
+      "command": "python",
+      "args": ["-m", "src.mcp_server_everything_search"],
+      "env": {
+        "EVERYTHING_HTTP_HOST": "127.0.0.1",
+        "EVERYTHING_HTTP_PORT": "8011"
+      }
+    },
+    {
+      "name": "Snyk Security MCP server",
+      "command": "snyk-mcp",
+      "args": [],
+      "env": {
+        "SNYK_TOKEN": "${SNYK_TOKEN}"
+      }
+    },
+    {
+      "name": "Sentry MCP server",
+      "command": "sentry-mcp",
+      "args": [],
+      "env": {
+        "SENTRY_AUTH_TOKEN": "${SENTRY_AUTH_TOKEN}"
+      }
+    },
+    {
+      "name": "Docs Search MCP server",
+      "command": "mcp-docs-search",
+      "args": [],
+      "env": {}
+    },
+    {
+      "name": "Oxylabs MCP server",
+      "command": "oxylabs-mcp",
+      "args": [],
+      "env": {
+        "OXYLABS_USERNAME": "${OXYLABS_USERNAME}",
+        "OXYLABS_PASSWORD": "${OXYLABS_PASSWORD}",
+        "OXYLABS_API_KEY": "${OXYLABS_API_KEY}"
+      }
+    },
+    {
+      "name": "Context7 MCP server",
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"],
+      "env": {}
+    },
+    {
+      "name": "Sequential Thinking MCP server",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "env": {}
+    }
+  ]
+}

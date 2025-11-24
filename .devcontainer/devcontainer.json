@@ -1,0 +1,29 @@
+{
+  "name": "Local LLM Dev Container",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts"
+    },
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.11"
+    },
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest"
+    }
+  },
+  "postCreateCommand": "bash scripts/bootstrap-linux.sh && bash scripts/install-mcps-ubuntu.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "continuedev.continue-vscode",
+        "ms-azuretools.vscode-docker",
+        "yzhang.markdown-all-in-one"
+      ],
+      "settings": {
+        "continue.model": "nemotron-9b",
+        "editor.formatOnSave": true
+      }
+    }
+  }
+}

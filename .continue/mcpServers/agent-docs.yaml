@@ -1,0 +1,53 @@
+name: agent-docs
+version: 0.0.1
+schema: v1
+
+mcpServers:
+  # Core servers
+  - name: Fetch MCP server
+    command: docker
+    args:
+      - run
+      - -i
+      - --rm
+      - mcp/fetch
+    env: {}
+  - name: GitHub MCP server
+    command: npx
+    args:
+      - -y
+      - "@modelcontextprotocol/server-github"
+    env:
+      GITHUB_TOKEN: "${GITHUB_TOKEN}"
+  - name: Docs Search MCP server
+    command: mcp-docs-search
+    args: []
+    env: {}
+  - name: Playwright Browser MCP server
+    command: npx
+    args:
+      - "@playwright/mcp@latest"
+    env: {}
+  - name: Oxylabs MCP server
+    command: oxylabs-mcp
+    args: []
+    env:
+      OXYLABS_USERNAME: "${OXYLABS_USERNAME}"
+      OXYLABS_PASSWORD: "${OXYLABS_PASSWORD}"
+      OXYLABS_API_KEY: "${OXYLABS_API_KEY}"
+
+  # Context7 – up-to-date docs summarisation
+  - name: Context7 MCP server
+    command: npx
+    args:
+      - -y
+      - "@upstash/context7-mcp"
+    env: {}
+
+  # Sequential Thinking – chain-of-thought management
+  - name: Sequential Thinking MCP server
+    command: npx
+    args:
+      - -y
+      - "@modelcontextprotocol/server-sequential-thinking"
+    env: {}

@@ -1,0 +1,6 @@
+{
+  "python.pythonPath": "./venv/bin/python",
+  "files.trimTrailingWhitespace": true,
+  "editor.tabSize": 2,
+  "continue.model": "nemotron-9b"
+}

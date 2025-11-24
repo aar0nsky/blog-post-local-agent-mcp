@@ -1,0 +1,85 @@
+name: agent-dev
+version: 0.0.1
+schema: v1
+
+mcpServers:
+  # Inherit from the master servers by referencing them manually
+  # Fetch, Filesystem and Git are always available (see server-master.yaml)
+  - name: Fetch MCP server
+    command: docker
+    args:
+      - run
+      - -i
+      - --rm
+      - mcp/fetch
+    env: {}
+  - name: Filesystem MCP server
+    command: docker
+    args:
+      - run
+      - -i
+      - --rm
+      - --mount
+      - type=bind,src=/ABSOLUTE/PATH/TO/YOUR/PROJECT,dst=/project
+      - mcp/filesystem
+      - /project
+    env: {}
+  - name: Git MCP server
+    command: docker
+    args:
+      - run
+      - -i
+      - --rm
+      - --mount
+      - type=bind,src=/ABSOLUTE/PATH/TO/YOUR/PROJECT,dst=/repo
+      - mcp/git
+      - /repo
+    env: {}
+
+  # XRAY code intelligence (requires xray-mcp installed globally)
+  - name: XRAY Code Intelligence
+    command: xray-mcp
+    args:
+      - --root
+      - /ABSOLUTE/PATH/TO/YOUR/PROJECT
+    env: {}
+
+  # SQLite server
+  - name: SQLite DB MCP server
+    command: npx
+    args:
+      - -y
+      - mcp-sqlite
+      - ./examples/poc-local-ai-workflow/data/dev.db
+    env: {}
+
+  # Docs search (generic; adjust command when you choose a specific package)
+  - name: Docs Search MCP server
+    command: mcp-docs-search
+    args: []
+    env: {}
+
+  # GitHub integration (requires GITHUB_TOKEN)
+  - name: GitHub MCP server
+    command: npx
+    args:
+      - -y
+      - "@modelcontextprotocol/server-github"
+    env:
+      GITHUB_TOKEN: "${GITHUB_TOKEN}"
+
+  # Context7 – up-to-date docs summarisation
+  - name: Context7 MCP server
+    command: npx
+    args:
+      - -y
+      - "@upstash/context7-mcp"
+    env: {}
+
+  # Sequential Thinking – chain-of-thought management
+  - name: Sequential Thinking MCP server
+    command: npx
+    args:
+      - -y
+      - "@modelcontextprotocol/server-sequential-thinking"
+    env: {}

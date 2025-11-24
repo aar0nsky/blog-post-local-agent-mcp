@@ -1,0 +1,44 @@
+name: server-master
+version: 0.0.1
+schema: v1
+
+# This file lists MCP servers that should always be available.  Other agent configs
+# can extend these definitions by including this file via the `includes` key or by
+# copying the entries below.
+
+mcpServers:
+  # Core fetch server
+  - name: Fetch MCP server
+    command: docker
+    args:
+      - run
+      - -i
+      - --rm
+      - mcp/fetch
+    env: {}
+
+  # Filesystem server (read/write).  Replace the mount source with your project path.
+  - name: Filesystem MCP server
+    command: docker
+    args:
+      - run
+      - -i
+      - --rm
+      - --mount
+      - type=bind,src=/ABSOLUTE/PATH/TO/YOUR/PROJECT,dst=/project
+      - mcp/filesystem
+      - /project
+    env: {}
+
+  # Git server
+  - name: Git MCP server
+    command: docker
+    args:
+      - run
+      - -i
+      - --rm
+      - --mount
+      - type=bind,src=/ABSOLUTE/PATH/TO/YOUR/PROJECT,dst=/repo
+      - mcp/git
+      - /repo
+    env: {}
